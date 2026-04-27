@@ -23,9 +23,9 @@ class AIPlayer:
     def get_move(self, board):
         moves = []
 
-        for p in board.get_all_pieces(self.color):
-            for m in p.get_valid_moves(board):
-                moves.append((p, m))
+        for piece in board.get_all_pieces(self.color):
+            for m in piece.get_valid_moves(board):
+                moves.append((piece, m))
 
         if not moves:
             return
