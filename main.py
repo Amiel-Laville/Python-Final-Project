@@ -24,19 +24,24 @@ def play_game(mode):
         player = white if turn == "white" else black
 
         if isinstance(player, Player):
-            move = input("Enter move (r c r c) or 'quit': ")
+            move = input("From (e2): ")
 
             if move.lower() == "quit":
-                print("Returning to menu...\n")
+                print("Back to menu...\n")
                 return
 
             try:
-                r1, c1, r2, c2 = map(int, move.split())
-                if board.move_piece((r1, c1), (r2, c2)):
+                to_move = input("To (e4): ")
+
+                r1, c1 = player.convert(move)
+                r2, c2 = player.convert(to_move)
+
+                if board.move_piece((r1,c1),(r2,c2)):
                     turn = "black" if turn == "white" else "white"
                     move_count += 1
                 else:
-                    print("Invalid move")
+                    print("Illegal move")
+
             except:
                 print("Bad input")
 
@@ -58,7 +63,7 @@ def main():
 
         choice = input("Choose: ")
 
-        if choice in ["1", "2", "3"]:
+        if choice in ["1","2","3"]:
             play_game(choice)
         elif choice == "4":
             break
