@@ -27,9 +27,20 @@ class ChessBoard:
         return board
 
     def display_board(self):
-        for row in self.board:
-            print(" ".join(str(p) if p else "." for p in row))
-        print()
+        print("    a  b  c  d  e  f  g  h")
+        print("  +------------------------+")
+
+        for i, row in enumerate(self.board):
+            row_num = 8 - i
+            print(f"{row_num} |", end=" ")
+
+            for piece in row:
+                print(piece if piece else ".", end="  ")
+
+            print(f"| {row_num}")
+
+        print("  +------------------------+")
+        print("    a  b  c  d  e  f  g  h\n")
 
     def is_valid_position(self, r, c):
         return 0 <= r < 8 and 0 <= c < 8
@@ -38,27 +49,24 @@ class ChessBoard:
         r1, c1 = start
         r2, c2 = end
 
-        if not self.is_valid_position(r1,c1) or not self.is_valid_position(r2,c2):
+        if not self.is_valid_position(r1, c1) or not self.is_valid_position(r2, c2):
             return False
 
         piece = self.board[r1][c1]
         if not piece:
             return False
 
-        if (r2,c2) not in piece.get_valid_moves(self):
+        if (r2, c2) not in piece.get_valid_moves(self):
             return False
 
         self.board[r2][c2] = piece
         self.board[r1][c1] = None
-        piece.position = (r2,c2)
+        piece.position = (r2, c2)
 
         return True
 
     def get_all_pieces(self, color):
-        pieces = []
-        for r in range(8):
-            for c in range(8):
-                p = self.board[r][c]
-                if p and p.color == color:
-                    pieces.append(p)
-        return pieces
+        return [
+            p for r in self.board for p in r
+            if p and p.color == color
+        ]
