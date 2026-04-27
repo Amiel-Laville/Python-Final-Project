@@ -38,19 +38,19 @@ class ChessBoard:
         r1, c1 = start
         r2, c2 = end
 
-        if not self.is_valid_position(r1, c1) or not self.is_valid_position(r2, c2):
+        if not self.is_valid_position(r1,c1) or not self.is_valid_position(r2,c2):
             return False
 
         piece = self.board[r1][c1]
         if not piece:
             return False
 
-        if (r2, c2) not in piece.get_valid_moves(self):
+        if (r2,c2) not in piece.get_valid_moves(self):
             return False
 
         self.board[r2][c2] = piece
         self.board[r1][c1] = None
-        piece.position = (r2, c2)
+        piece.position = (r2,c2)
 
         return True
 
