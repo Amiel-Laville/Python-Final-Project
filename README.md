@@ -22,7 +22,9 @@ To run this, just make sure you have Python installed. Then clone the repo and r
 When you run the game, you’ll first choose a game mode:
 
 1 = Human vs AI
+
 2 = Human vs Human
+
 3 = AI vs AI
 
 After that, the game will start and the board will be printed in the console.
@@ -36,11 +38,17 @@ Piece Symbols
 Each piece is shown using a letter:
 
 P / p = Pawn
+
 R / r = Rook
+
 N / n = Knight
+
 B / b = Bishop
+
 Q / q = Queen
+
 K / k = King
+
 Uppercase letters = White pieces
 Lowercase letters = Black pieces
 How to Enter Moves
