@@ -1,42 +1,145 @@
-import random
-
-class Player:
-    def __init__(self, color):
+class Piece:
+    def __init__(self, color, position):
         self.color = color
+        self.position = position
+        self.symbol = "?"
 
-    def get_move(self, board):
-        while True:
-            try:
-                move = input(f"{self.color} move (from_r from_c to_r to_c): ")
-                r1, c1, r2, c2 = map(int, move.split())
+    def __str__(self):
+        return (self.symbol.upper() if self.color == "white"
+                else self.symbol.lower())
 
-                if board.move_piece((r1, c1), (r2, c2)):
-                    return
+
+class Pawn(Piece):
+    def __init__(self, color, pos):
+        super().__init__(color, pos)
+        self.symbol = "P"
+
+    def get_valid_moves(self, board):
+        moves = []
+        r, c = self.position
+
+        direction = -1 if self.color == "white" else 1
+        start_row = 6 if self.color == "white" else 1
+
+        # forward
+        if board.is_valid_position(r + direction, c):
+            if board.board[r + direction][c] is None:
+                moves.append((r + direction, c))
+
+                if r == start_row and board.board[r + 2*direction][c] is None:
+                    moves.append((r + 2*direction, c))
+
+        # capture
+        for dc in [-1, 1]:
+            nr, nc = r + direction, c + dc
+            if board.is_valid_position(nr, nc):
+                t = board.board[nr][nc]
+                if t and t.color != self.color:
+                    moves.append((nr, nc))
+
+        return moves
+
+
+class Rook(Piece):
+    def __init__(self, color, pos):
+        super().__init__(color, pos)
+        self.symbol = "R"
+
+    def get_valid_moves(self, board):
+        moves = []
+        r, c = self.position
+
+        for dr, dc in [(1,0),(-1,0),(0,1),(0,-1)]:
+            for i in range(1,8):
+                nr, nc = r + dr*i, c + dc*i
+                if not board.is_valid_position(nr,nc):
+                    break
+
+                t = board.board[nr][nc]
+                if t is None:
+                    moves.append((nr,nc))
                 else:
-                    print("Invalid move, try again.")
+                    if t.color != self.color:
+                        moves.append((nr,nc))
+                    break
 
-            except:
-                print("Invalid input.")
+        return moves
 
 
-class AIPlayer:
-    def __init__(self, color):
-        self.color = color
+class Knight(Piece):
+    def __init__(self, color, pos):
+        super().__init__(color, pos)
+        self.symbol = "N"
 
-    def get_move(self, board):
-        print(f"AI ({self.color}) thinking...")
+    def get_valid_moves(self, board):
+        moves = []
+        r, c = self.position
 
-        pieces = board.get_all_pieces(self.color)
-        random.shuffle(pieces)
+        for dr, dc in [(2,1),(2,-1),(-2,1),(-2,-1),
+                       (1,2),(1,-2),(-1,2),(-1,-2)]:
+            nr, nc = r+dr, c+dc
+            if board.is_valid_position(nr,nc):
+                t = board.board[nr][nc]
+                if not t or t.color != self.color:
+                    moves.append((nr,nc))
 
-        for (r, c) in pieces:
-            # try simple directions
-            for dr in [-1, 0, 1]:
-                for dc in [-1, 0, 1]:
-                    if dr == 0 and dc == 0:
-                        continue
+        return moves
 
-                    nr, nc = r + dr, c + dc
 
-                    if board.move_piece((r, c), (nr, nc)):
-                        return
+class Bishop(Piece):
+    def __init__(self, color, pos):
+        super().__init__(color, pos)
+        self.symbol = "B"
+
+    def get_valid_moves(self, board):
+        moves = []
+        r, c = self.position
+
+        for dr, dc in [(1,1),(1,-1),(-1,1),(-1,-1)]:
+            for i in range(1,8):
+                nr, nc = r + dr*i, c + dc*i
+                if not board.is_valid_position(nr,nc):
+                    break
+
+                t = board.board[nr][nc]
+                if t is None:
+                    moves.append((nr,nc))
+                else:
+                    if t.color != self.color:
+                        moves.append((nr,nc))
+                    break
+
+        return moves
+
+
+class Queen(Piece):
+    def __init__(self, color, pos):
+        super().__init__(color, pos)
+        self.symbol = "Q"
+
+    def get_valid_moves(self, board):
+        return Rook(self.color, self.position).get_valid_moves(board) + \
+               Bishop(self.color, self.position).get_valid_moves(board)
+
+
+class King(Piece):
+    def __init__(self, color, pos):
+        super().__init__(color, pos)
+        self.symbol = "K"
+
+    def get_valid_moves(self, board):
+        moves = []
+        r, c = self.position
+
+        for dr in [-1,0,1]:
+            for dc in [-1,0,1]:
+                if dr == 0 and dc == 0:
+                    continue
+
+                nr, nc = r+dr, c+dc
+                if board.is_valid_position(nr,nc):
+                    t = board.board[nr][nc]
+                    if not t or t.color != self.color:
+                        moves.append((nr,nc))
+
+        return moves
