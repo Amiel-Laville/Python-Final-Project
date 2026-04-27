@@ -12,27 +12,32 @@ class ChessBoard:
 
     def display_board(self):
         for row in self.board:
-            print(" ".join(piece if piece else '.' for piece in row))
+            print(" ".join(piece if piece else "." for piece in row))
         print()
 
-    def is_valid_position(self, row, col):
-        return 0 <= row < 8 and 0 <= col < 8
+    def is_valid_position(self, r, c):
+        return 0 <= r < 8 and 0 <= c < 8
 
     def move_piece(self, start, end):
-        from_row, from_col = start
-        to_row, to_col = end
+        from_r, from_c = start
+        to_r, to_c = end
 
-        if not (self.is_valid_position(from_row, from_col) and
-                self.is_valid_position(to_row, to_col)):
+        if not self.is_valid_position(from_r, from_c) or not self.is_valid_position(to_r, to_c):
             return False
 
-        piece = self.board[from_row][from_col]
+        piece = self.board[from_r][from_c]
         if piece is None:
             return False
 
-        # Basic move (no real chess rules enforced)
-        self.board[to_row][to_col] = piece
-        self.board[from_row][from_col] = None
+        target = self.board[to_r][to_c]
+
+        # ❗ prevents capturing your own pieces (THIS FIXES YOUR BUG)
+        if target is not None:
+            if piece.isupper() == target.isupper():
+                return False
+
+        self.board[to_r][to_c] = piece
+        self.board[from_r][from_c] = None
         return True
 
     def get_all_pieces(self, color):
@@ -41,7 +46,8 @@ class ChessBoard:
             for c in range(8):
                 piece = self.board[r][c]
                 if piece:
-                    if (color == 'white' and piece.isupper()) or \
-                       (color == 'black' and piece.islower()):
+                    if color == "white" and piece.isupper():
+                        pieces.append((r, c))
+                    if color == "black" and piece.islower():
                         pieces.append((r, c))
         return pieces
