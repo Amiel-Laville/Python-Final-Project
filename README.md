@@ -27,6 +27,8 @@ When you run the game, you’ll first choose a game mode:
 
 3 = AI vs AI
 
+4 = Exit
+
 After that, the game will start and the board will be printed in the console.
 
 Board Layout
@@ -55,9 +57,13 @@ Lowercase letters = Black pieces
 
 ## How to Enter Moves
 
-When it’s your turn, you enter a move like this:
+When it’s your turn, you enter a move like this
 
-from_row from_col to_row to_col
+Each move has 2 steps:
+
+Select the piece you want to move
+
+Select where you want to move it
 
 This means:
 
@@ -67,21 +73,27 @@ The position you want to move it to
 
 Example Moves
 
-Move a white pawn forward:
- 6 0 5 0
+From: e2  
 
-Move a knight:
- 7 1 5 2
+To: e4
 
-Move a rook:
- 7 0 5 0
+or
 
-Important Notes
+From: g1  
 
-Rows and columns are numbered from 0 to 7.
+To: f3
 
-Row 0 is the top of the board (black side).
 
-Row 7 is the bottom of the board (white side).
+## Features
 
-If you enter an invalid move, the game will ask you to try again.
+Human vs AI gameplay
+
+Human vs Human mode
+
+AI vs AI mode
+
+Basic chess rules (legal moves enforced for each piece)
+
+Turn-based system
+
+Simple AI that chooses valid moves
