@@ -1,12 +1,17 @@
-# Chess Game Project
+# Chess Game - Introduction to Problem Solving and Programming in Python
 
-This project implements a chess game in Python.
+This is my final project for my Introduction to Problem Solving and Programming in Python class. It's basically a chess game I made using Python.
 
 ## Files
-- `main.py`: Entry point for the game.
-- `chess_board.py`: Contains the logic for the chess board.
-- `pieces.py`: Defines the chess pieces and their movements.
-- `player.py`: Logic for player and AI.
+
+**main.py**: This is where the game starts.
+
+**chess_board.py**: Handles how the board works and keeps track of everything.
+
+**pieces.py**: Defines all the chess pieces and how they move.
+
+**player.py**: Controls the player and the AI.
 
 ## Installation
-To run this project, make sure you have Python installed. Clone the repository and run `main.py` to start the game.
+
+To run this, just make sure you have Python installed. Then clone the repo and run main.py to start playing.
