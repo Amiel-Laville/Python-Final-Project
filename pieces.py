@@ -1,177 +1,42 @@
-"""
-Piece definitions and movement logic for chess
-"""
+import random
 
-class Piece:
-    """Base class for chess pieces"""
-    def __init__(self, color, position):
-        self.color = color  # 'white' or 'black'
-        self.position = position  # (row, col)
-        self.symbol = '?'
-        
-    def get_valid_moves(self, board):
-        """Override in subclasses to return list of valid moves"""
-        return []
-    
-    def __repr__(self):
-        return f"{self.color[0].upper()}{self.symbol}"
+class Player:
+    def __init__(self, color):
+        self.color = color
 
+    def get_move(self, board):
+        while True:
+            try:
+                move = input(f"{self.color} move (from_r from_c to_r to_c): ")
+                r1, c1, r2, c2 = map(int, move.split())
 
-class Pawn(Piece):
-    def __init__(self, color, position):
-        super().__init__(color, position)
-        self.symbol = 'P'
-        self.has_moved = False
-        
-    def get_valid_moves(self, board):
-        moves = []
-        row, col = self.position
-        direction = -1 if self.color == 'white' else 1
-        start_row = 6 if self.color == 'white' else 1
-        
-        # Forward move
-        new_row = row + direction
-        if 0 <= new_row < 8:
-            if board.is_empty(new_row, col):
-                moves.append((new_row, col))
-                # Double move from start
-                if row == start_row and board.is_empty(row + 2*direction, col):
-                    moves.append((row + 2*direction, col))
-        
-        # Captures
-        for col_offset in [-1, 1]:
-            new_col = col + col_offset
-            if 0 <= new_row < 8 and 0 <= new_col < 8:
-                target = board.get_piece(new_row, new_col)
-                if target and target.color != self.color:
-                    moves.append((new_row, new_col))
-        
-        return moves
-
-
-class Rook(Piece):
-    def __init__(self, color, position):
-        super().__init__(color, position)
-        self.symbol = 'R'
-        
-    def get_valid_moves(self, board):
-        moves = []
-        row, col = self.position
-        
-        # Horizontal and vertical directions
-        for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
-            for i in range(1, 8):
-                new_row, new_col = row + dr*i, col + dc*i
-                if not (0 <= new_row < 8 and 0 <= new_col < 8):
-                    break
-                
-                target = board.get_piece(new_row, new_col)
-                if target is None:
-                    moves.append((new_row, new_col))
-                elif target.color != self.color:
-                    moves.append((new_row, new_col))
-                    break
+                if board.move_piece((r1, c1), (r2, c2)):
+                    return
                 else:
-                    break
-        
-        return moves
+                    print("Invalid move, try again.")
+
+            except:
+                print("Invalid input.")
 
 
-class Knight(Piece):
-    def __init__(self, color, position):
-        super().__init__(color, position)
-        self.symbol = 'N'
-        
-    def get_valid_moves(self, board):
-        moves = []
-        row, col = self.position
-        
-        for dr, dc in [(2, 1), (2, -1), (-2, 1), (-2, -1),
-                       (1, 2), (1, -2), (-1, 2), (-1, -2)]:
-            new_row, new_col = row + dr, col + dc
-            if 0 <= new_row < 8 and 0 <= new_col < 8:
-                target = board.get_piece(new_row, new_col)
-                if target is None or target.color != self.color:
-                    moves.append((new_row, new_col))
-        
-        return moves
+class AIPlayer:
+    def __init__(self, color):
+        self.color = color
 
+    def get_move(self, board):
+        print(f"AI ({self.color}) thinking...")
 
-class Bishop(Piece):
-    def __init__(self, color, position):
-        super().__init__(color, position)
-        self.symbol = 'B'
-        
-    def get_valid_moves(self, board):
-        moves = []
-        row, col = self.position
-        
-        # Diagonal directions
-        for dr, dc in [(1, 1), (1, -1), (-1, 1), (-1, -1)]:
-            for i in range(1, 8):
-                new_row, new_col = row + dr*i, col + dc*i
-                if not (0 <= new_row < 8 and 0 <= new_col < 8):
-                    break
-                
-                target = board.get_piece(new_row, new_col)
-                if target is None:
-                    moves.append((new_row, new_col))
-                elif target.color != self.color:
-                    moves.append((new_row, new_col))
-                    break
-                else:
-                    break
-        
-        return moves
+        pieces = board.get_all_pieces(self.color)
+        random.shuffle(pieces)
 
+        for (r, c) in pieces:
+            # try simple directions
+            for dr in [-1, 0, 1]:
+                for dc in [-1, 0, 1]:
+                    if dr == 0 and dc == 0:
+                        continue
 
-class Queen(Piece):
-    def __init__(self, color, position):
-        super().__init__(color, position)
-        self.symbol = 'Q'
-        
-    def get_valid_moves(self, board):
-        moves = []
-        row, col = self.position
-        
-        # All 8 directions
-        for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0),
-                       (1, 1), (1, -1), (-1, 1), (-1, -1)]:
-            for i in range(1, 8):
-                new_row, new_col = row + dr*i, col + dc*i
-                if not (0 <= new_row < 8 and 0 <= new_col < 8):
-                    break
-                
-                target = board.get_piece(new_row, new_col)
-                if target is None:
-                    moves.append((new_row, new_col))
-                elif target.color != self.color:
-                    moves.append((new_row, new_col))
-                    break
-                else:
-                    break
-        
-        return moves
+                    nr, nc = r + dr, c + dc
 
-
-class King(Piece):
-    def __init__(self, color, position):
-        super().__init__(color, position)
-        self.symbol = 'K'
-        
-    def get_valid_moves(self, board):
-        moves = []
-        row, col = self.position
-        
-        # One square in any direction
-        for dr in [-1, 0, 1]:
-            for dc in [-1, 0, 1]:
-                if dr == 0 and dc == 0:
-                    continue
-                new_row, new_col = row + dr, col + dc
-                if 0 <= new_row < 8 and 0 <= new_col < 8:
-                    target = board.get_piece(new_row, new_col)
-                    if target is None or target.color != self.color:
-                        moves.append((new_row, new_col))
-        
-        return moves
+                    if board.move_piece((r, c), (nr, nc)):
+                        return
