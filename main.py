@@ -4,71 +4,66 @@ from player import Player, AIPlayer
 def play_game(mode):
     board = ChessBoard()
 
-    if mode == '1':
-        white_player = Player('white')
-        black_player = AIPlayer('black')
-    elif mode == '2':
-        white_player = Player('white')
-        black_player = Player('black')
+    if mode == "1":
+        white = Player("white")
+        black = AIPlayer("black")
+    elif mode == "2":
+        white = Player("white")
+        black = Player("black")
     else:
-        white_player = AIPlayer('white')
-        black_player = AIPlayer('black')
+        white = AIPlayer("white")
+        black = AIPlayer("black")
 
-    current_color = 'white'
+    turn = "white"
     move_count = 0
     max_moves = 200
 
     while move_count < max_moves:
         board.display_board()
 
-        print("Type 'quit' to end game and return to menu")
+        player = white if turn == "white" else black
 
-        player = white_player if current_color == 'white' else black_player
-
-        # ---- END GAME COMMAND CHECK ----
         if isinstance(player, Player):
-            move = input(f"{current_color} move (r c r c): ")
+            move = input("Enter move (r c r c) or 'quit': ")
 
             if move.lower() == "quit":
-                print("Returning to main menu...\n")
+                print("Returning to menu...\n")
                 return
 
             try:
                 r1, c1, r2, c2 = map(int, move.split())
                 if board.move_piece((r1, c1), (r2, c2)):
-                    current_color = 'black' if current_color == 'white' else 'white'
+                    turn = "black" if turn == "white" else "white"
                     move_count += 1
                 else:
                     print("Invalid move")
             except:
-                print("Invalid input")
+                print("Bad input")
 
         else:
-            # AI move
             player.get_move(board)
-            current_color = 'black' if current_color == 'white' else 'white'
+            turn = "black" if turn == "white" else "white"
             move_count += 1
 
-    print("Game ended (move limit reached). Returning to menu...\n")
+    print("Game ended.\n")
 
 
 def main():
     while True:
-        print("=== CHESS GAME MENU ===")
+        print("\n=== CHESS MENU ===")
         print("1. Human vs AI")
         print("2. Human vs Human")
         print("3. AI vs AI")
         print("4. Exit")
 
-        choice = input("Select option: ")
+        choice = input("Choose: ")
 
-        if choice in ['1', '2', '3']:
+        if choice in ["1", "2", "3"]:
             play_game(choice)
-        elif choice == '4':
-            print("Goodbye!")
+        elif choice == "4":
             break
         else:
-            print("Invalid choice\n")
+            print("Invalid")
 
 
 if __name__ == "__main__":
