@@ -4,17 +4,16 @@ class Player:
     def __init__(self, color):
         self.color = color
 
-    def get_move(self, board):
-        while True:
-            try:
-                move = input("Move (r c r c): ")
-                r1, c1, r2, c2 = map(int, move.split())
+    def convert(self, pos):
+        col_map = {
+            "a":0,"b":1,"c":2,"d":3,
+            "e":4,"f":5,"g":6,"h":7
+        }
 
-                if board.move_piece((r1,c1),(r2,c2)):
-                    return
-                print("Invalid move")
-            except:
-                print("Bad input")
+        col = col_map[pos[0].lower()]
+        row = 8 - int(pos[1])
+
+        return (row, col)
 
 
 class AIPlayer:
@@ -22,10 +21,9 @@ class AIPlayer:
         self.color = color
 
     def get_move(self, board):
-        pieces = board.get_all_pieces(self.color)
-
         moves = []
-        for p in pieces:
+
+        for p in board.get_all_pieces(self.color):
             for m in p.get_valid_moves(board):
                 moves.append((p, m))
 
