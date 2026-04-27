@@ -1,10 +1,8 @@
-"""Main chess game entry point"""
 from chess_board import ChessBoard
 from player import Player, AIPlayer
 
 def main():
     print("Welcome to Chess!")
-    print("Game mode selection:")
     print("1. Human vs AI")
     print("2. Human vs Human")
     print("3. AI vs AI")
@@ -20,7 +18,7 @@ def main():
     if mode == '1':
         white_player = Player('white')
         black_player = AIPlayer('black')
-        print("You are White. AI is Black.")
+        print("You are White.")
     elif mode == '2':
         white_player = Player('white')
         black_player = Player('black')
@@ -29,8 +27,11 @@ def main():
         black_player = AIPlayer('black')
     
     current_color = 'white'
-    
-    while True:
+
+    move_count = 0
+    max_moves = 100  # stops infinite games
+
+    while move_count < max_moves:
         board.display_board()
         
         player = white_player if current_color == 'white' else black_player
@@ -38,12 +39,13 @@ def main():
         try:
             player.get_move(board)
             current_color = 'black' if current_color == 'white' else 'white'
+            move_count += 1
+
         except KeyboardInterrupt:
-            print("\nGame ended by player.")
+            print("\nGame ended.")
             break
-        except Exception as e:
-            print(f"Error: {e}")
-            continue
+
+    print("Game ended (move limit reached).")
 
 if __name__ == "__main__":
     main()
