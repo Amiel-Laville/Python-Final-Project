@@ -50,8 +50,10 @@ Q / q = Queen
 K / k = King
 
 Uppercase letters = White pieces
+
 Lowercase letters = Black pieces
-How to Enter Moves
+
+## How to Enter Moves
 
 When it’s your turn, you enter a move like this:
 
@@ -60,16 +62,26 @@ from_row from_col to_row to_col
 This means:
 
 The position your piece is moving from
+
 The position you want to move it to
+
 Example Moves
+
 Move a white pawn forward:
-6 0 5 0
+ 6 0 5 0
+
 Move a knight:
-7 1 5 2
+ 7 1 5 2
+
 Move a rook:
-7 0 5 0
+ 7 0 5 0
+
 Important Notes
+
 Rows and columns are numbered from 0 to 7.
+
 Row 0 is the top of the board (black side).
+
 Row 7 is the bottom of the board (white side).
+
 If you enter an invalid move, the game will ask you to try again.
