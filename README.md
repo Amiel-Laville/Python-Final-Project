@@ -2,6 +2,9 @@
 
 This is my final project for my Introduction to Problem Solving and Programming in Python class. It's basically a chess game I made using Python.
 
+Video of Showing the Game
+https://temple.zoom.us/rec/share/HYaqvpw0VN6x9khcfPaxbvVFpr90m_WDviPKdrK4FD-NA-UEdGuoWBx6iGo5b_Eu.gnecsSsarFis14uc
+
 ## Files
 
 **main.py**: This is where the game starts.
